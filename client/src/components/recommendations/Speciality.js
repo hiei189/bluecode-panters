@@ -1,10 +1,12 @@
+import * as R from 'ramda';
 import React from 'react';
 import { Typography, Divider, Button, withStyles } from '@material-ui/core';
+import { Link, withRouter } from 'react-router-dom';
 import Grid from '../ui/Grid';
 
 const styles = {};
 
-const Speciality = ({ speciality, coincidence }) => {
+const Speciality = ({ speciality, coincidence, history }) => {
   return (
     <Grid container alignItems="baseline">
       <Grid item md={8} xs={6}>
@@ -13,11 +15,18 @@ const Speciality = ({ speciality, coincidence }) => {
           2
         )} % de coincidencia`}</Typography>
       </Grid>
-      <Button color="secondary" variant="raised">
+      <Button
+        onClick={() => history.push(`/especialidad/${speciality}`)}
+        color="secondary"
+        variant="raised"
+      >
         Elegir
       </Button>
     </Grid>
   );
 };
 
-export default withStyles(styles)(Speciality);
+export default R.compose(
+  withStyles(styles),
+  withRouter
+)(Speciality);

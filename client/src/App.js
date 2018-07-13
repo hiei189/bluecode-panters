@@ -7,6 +7,7 @@ import { withStyles, Grid } from '@material-ui/core';
 import Logo from './components/ui/Logo';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Recommendations from './pages/Recommendations';
+import Especialidad from './pages/Especialidad';
 
 const styles = theme => ({
   root: {
@@ -35,6 +36,11 @@ class App extends Component {
           <div className={classes.page}>
             <Route path="/" exact component={Index} />
             <Route path="/recommendations" exact component={Recommendations} />
+            <Route
+              path="/especialidad/:especialidad"
+              exact
+              component={Especialidad}
+            />
           </div>
         </div>
         <CssBaseline />

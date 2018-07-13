@@ -1,42 +1,88 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Field } from 'react-final-form';
+import arrayMutators from 'final-form-arrays';
+import { FieldArray } from 'react-final-form-arrays';
+import Add from '@material-ui/icons/Add';
+import Remove from '@material-ui/icons/Remove';
 import Grid from '../components/ui/Grid';
 import TextField from '../components/form/fields/TextField';
 import Recommendations from '../components/Recommendations';
+import { Button } from '@material-ui/core';
 
 class RecommendationsPage extends Component {
   state = {
     data: []
   };
 
-  getRecommendations = async ({ sintoma } = { sintoma: ' ' }) => {
-    const data = await fetch(`/api/classifier?text=${sintoma}`);
+  getRecommendations = async ({ sintomas } = { sintomas: [] }) => {
+    this.setState({ loading: true });
+    const sinstomasText = sintomas.map(s => (s || {}).sintoma).join(' ');
+    const data = await fetch(`/api/classifier?text=${sinstomasText}`);
     const res = await data.json();
-    this.setState({ data: res.data.classes });
+    this.setState({ data: res.data.classes, loading: false });
   };
 
   render() {
-    const { data } = this.state;
+    const { data, loading } = this.state;
     return (
       <Fragment>
         <Grid noMargin container spacing={24}>
           <Grid item md={6}>
             <Form
               onSubmit={this.getRecommendations}
+              mutators={{ ...arrayMutators }}
               render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
-                  <Field
-                    label="¿Qué síntomas tienes?"
-                    name="sintoma"
-                    fullWidth
-                    component={TextField}
-                  />
+                  <FieldArray name="sintomas">
+                    {({ fields }) => {
+                      console.log(fields.length);
+                      if (!fields.length) fields.push();
+                      return (
+                        <Fragment>
+                          {fields.map((name, i) => (
+                            <Grid container key={i}>
+                              <Field
+                                label="¿Qué síntomas tienes?"
+                                name={`${name}.sintoma`}
+                                fullWidth
+                                component={TextField}
+                              />
+                            </Grid>
+                          ))}
+                          <Grid container item justify="flex-end">
+                            {fields.length > 1 && (
+                              <Button
+                                type="button"
+                                onClick={() => fields.pop()}
+                              >
+                                <Remove />
+                              </Button>
+                            )}
+                            <Button type="button" onClick={() => fields.push()}>
+                              <Add />
+                            </Button>
+                          </Grid>
+                        </Fragment>
+                      );
+                    }}
+                  </FieldArray>
+                  <br />
+                  <Grid container item justify="flex-end">
+                    <Button
+                      color="primary"
+                      type="submit"
+                      variant="raised"
+                      fullWidth
+                    >
+                      Pedir síntoma
+                    </Button>
+                  </Grid>
                 </form>
               )}
             />
           </Grid>
           <Grid item md={6}>
-            <Recommendations data={data} />
+            <Recommendations data={data} loading={loading} />
           </Grid>
         </Grid>
       </Fragment>
