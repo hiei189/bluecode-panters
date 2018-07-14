@@ -1,29 +1,19 @@
 import React, { Component, Fragment } from 'react';
-import { Typography, Paper, Grid, withStyles } from '@material-ui/core';
-import Star from '@material-ui/icons/Star';
-
-const medicos = [
-  {
-    id: 1,
-    name: 'Juan Perez',
-    description: 'Doctor con 100 años de experiencia',
-    stars: 5,
-    address: 'Bolivar - Pueblo Libre'
-  },
-  {
-    id: 2,
-    name: 'Arthur Ramos',
-    description: 'Médico de la PUCP',
-    stars: 4,
-    address: 'Aeropuerto - Callao'
-  }
-];
+import * as R from 'ramda';
+import { Typography, Paper, Grid, withStyles, Avatar } from '@material-ui/core';
+import Star from '../components/ui/Star';
+import medicos from '../services/medicos';
 
 const styles = theme => ({
   paper: {
     width: '100%',
     padding: '1rem',
     margin: '0.5rem'
+  },
+  bigAvatar: {
+    width: '4rem',
+    height: '4rem',
+    marginRight: '1rem'
   }
 });
 
@@ -40,17 +30,37 @@ class Especialidad extends Component {
           Selecciona tu médico ideal en <strong>{params.especialidad}</strong>
         </Typography>
         {medicos.map(m => (
-          <Grid container item xs={12}>
+          <Grid key={m.id} container item xs={12}>
             <Paper className={classes.paper} key={m.id}>
-              <Typography variant="title">{m.name}</Typography>
-              <div>
-                <svg path="M12 17.27L18v.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-                <Star />
-              </div>
+              <Grid container>
+                <Grid item xs="auto">
+                  <Avatar
+                    className={classes.bigAvatar}
+                    src={`/medicos/${m.thumbnail}`}
+                  />
+                </Grid>
+                <Grid item xs="auto">
+                  <Typography variant="title">{m.name}</Typography>
+                  <div>
+                    {R.range(0, 5).map(idx => {
+                      const filledStars = parseInt(m.stars);
+                      return (
+                        <Star
+                          key={idx}
+                          name={m.name.split(' ')[0] + m.id + idx}
+                          value={
+                            idx < filledStars
+                              ? 1
+                              : idx === filledStars
+                                ? m.stars % 1
+                                : 0
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                </Grid>
+              </Grid>
             </Paper>
           </Grid>
         ))}

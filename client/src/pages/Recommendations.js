@@ -9,6 +9,8 @@ import TextField from '../components/form/fields/TextField';
 import Recommendations from '../components/Recommendations';
 import { Button } from '@material-ui/core';
 
+const required = value => !value && 'Campo requerido';
+
 class RecommendationsPage extends Component {
   state = {
     data: []
@@ -35,7 +37,6 @@ class RecommendationsPage extends Component {
                 <form onSubmit={handleSubmit}>
                   <FieldArray name="sintomas">
                     {({ fields }) => {
-                      console.log(fields.length);
                       if (!fields.length) fields.push();
                       return (
                         <Fragment>
@@ -44,7 +45,9 @@ class RecommendationsPage extends Component {
                               <Field
                                 label="¿Qué síntomas tienes?"
                                 name={`${name}.sintoma`}
+                                validate={required}
                                 fullWidth
+                                autoComplete="off"
                                 component={TextField}
                               />
                             </Grid>
