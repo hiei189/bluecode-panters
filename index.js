@@ -35,6 +35,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
-app.listen(process.env.PORT || 3000, (err, res) => {
-  console.log('LISTENING ON PORT ' + process.env.PORT);
+app.listen(process.env.VCAP_APP_PORT || 3000, (err, res) => {
+  console.log('LISTENING ON PORT ' + process.env.VCAP_APP_PORT);
 });
