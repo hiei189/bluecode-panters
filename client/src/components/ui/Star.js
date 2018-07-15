@@ -4,7 +4,7 @@ class Star extends Component {
   render() {
     const { value, name } = this.props;
     const percent = `${parseInt(value * 100)}%`;
-    console.log(value, percent);
+
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"

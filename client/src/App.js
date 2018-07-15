@@ -8,6 +8,7 @@ import Logo from './components/ui/Logo';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Recommendations from './pages/Recommendations';
 import Especialidad from './pages/Especialidad';
+import Cita from './pages/Cita';
 
 const styles = theme => ({
   root: {
@@ -41,6 +42,7 @@ class App extends Component {
               exact
               component={Especialidad}
             />
+            <Route path="/cita/:especialidad/:id" exact component={Cita} />
           </div>
         </div>
         <CssBaseline />
